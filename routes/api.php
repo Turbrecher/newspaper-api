@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,31 +17,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//USERS
+Route::get('/users', [UserController::class, "getUsers"])->name("userList");
+Route::post('/users', [UserController::class, "createUser"])->name("userCreate");
+//Route::middleware('auth:sanctum')->post('/users', [UserController::class, "createUser"])->name("userCreate");
+Route::get('/users/{id}', [UserController::class, "getUser"])->name("userDetails");
+//Route::middleware('auth:sanctum')->put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
+Route::put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
 
 
-Route::get('/users', function () {
+//ARTICLES
+Route::get('/articles', [ArticleController::class, "getArticles"])->name("articleList");
+Route::post('/articles', [ArticleController::class, "createArticle"])->name("articleCreate");
+//Route::middleware('auth:sanctum')->post('/users', [UserController::class, "createUser"])->name("userCreate");
+Route::get('/articles/{id}', [ArticleController::class, "getArticle"])->name("articleDetails");
+//Route::middleware('auth:sanctum')->put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
+Route::put('/articles/{id}', [ArticleController::class, "editArticle"])->name("articleEdit");
+
+
+//LOGIN
+Route::any("/login", function () {
     return response()->json(
-        [
-            [
-                "user" => "user1"
-            ],
-            [
-                "user" => "user2"
-            ],
-        ],
-        404
+        ["error" => "You have to log in before doing this request"],
+        401
     );
-})->name("users");
-
-
-Route::get('/user/{id}', function (int $id) {
-    return response()->json(
-        [
-            "id" => $id
-        ],
-        404
-    );
-})->name("user");
+})->name("login");
