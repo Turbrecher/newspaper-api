@@ -50,10 +50,7 @@ class ArticleController extends Controller
         $validated = $request->validate([
             "title" => ["required", "max:100"],
             "subtitle" => ["required", "max:50"],
-            "content" => ["required", "max:2048"],
-            "user_id" => ["required", "integer"],
-            "date" => ["required", "regex:/^([0-9]{2,2}-[0-9]{2,2}-[0-9]{4,4})$/"],
-            "time" => ["required", "regex:/^([0-9]{2,2}:[0-9]{2,2})$/"]
+            "content" => ["required", "max:2048"]
         ]);
 
 
@@ -61,9 +58,9 @@ class ArticleController extends Controller
         $article->title = $request['title'];
         $article->subtitle = $request['subtitle'];
         $article->content = $request['content'];
-        $article->user_id = $request['user_id'];
-        $article->date = $request['date'];
-        $article->time = $request['time'];
+        $article->user_id = $request->user()->id;
+        $article->date = date("m-d-Y");
+        $article->time = date("H:i");
 
 
         if ($request->photo != "") {
@@ -75,6 +72,7 @@ class ArticleController extends Controller
         return response()->json(
             [
                 "article_id" => $article->id,
+                "article" => $article,
                 "message" => "Article succesfully created"
             ],
             200
@@ -84,24 +82,38 @@ class ArticleController extends Controller
     //Method that edits an existing user of db.
     function editArticle(Request $request, int $id)
     {
+        if ($request->user()->hasRole('general')) {
+            return response()->json(
+                ["message" => "You are not allowed to edit this article"],
+                401
+            );
+        }
+
+
         $validated = $request->validate([
             "title" => ["required", "max:100"],
             "subtitle" => ["required", "max:50"],
             "content" => ["required", "max:2048"],
-            "photo" => ["regex:https|^$"],
-            "user_id" => ["required", "integer"],
-            "date" => ["required", "regex:[0-9]{2,2}-[0-9]{2,2}[0-9]{4,4}"],
-            "time" => ["required", "regex:[0-9]{2,2}:[0-9]{2,2}"]
+            "photo" => ["regex:https|^$"]
         ]);
 
+        $article = Article::find($id);
 
-        $article = new Article();
+        //If writer user tries to edit another person's article.
+        if ($request->user()->hasRole('writer')) {
+            $NOT_MY_ARTICLE = $request->user()->id != $article->user_id;
+            if ($NOT_MY_ARTICLE) {
+                return response()->json(
+                    ["message" => "You are not allowed to edit this article"],
+                    401
+                );
+            }
+        }
+
+
         $article->title = $request['title'];
         $article->subtitle = $request['subtitle'];
         $article->content = $request['content'];
-        $article->user_id = $request['user_id'];
-        $article->date = $request['date'];
-        $article->time = $request['time'];
 
 
         if ($request->photo != "") {
@@ -113,6 +125,7 @@ class ArticleController extends Controller
         return response()->json(
             [
                 "article_id" => $article->id,
+                "article" => $article,
                 "message" => "Article succesfully edited"
             ],
             200

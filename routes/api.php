@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,28 +19,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//AUTH
+Route::post('/login', [UserController::class, "login"])->name("login");
+Route::post('/register', [UserController::class, "register"])->name("register");
+Route::post('/logout', [UserController::class, "logout"])->name("logout")->middleware("auth:sanctum");
+
 //USERS
-Route::get('/users', [UserController::class, "getUsers"])->name("userList");
-Route::post('/users', [UserController::class, "createUser"])->name("userCreate");
-//Route::middleware('auth:sanctum')->post('/users', [UserController::class, "createUser"])->name("userCreate");
-Route::get('/users/{id}', [UserController::class, "getUser"])->name("userDetails");
-//Route::middleware('auth:sanctum')->put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
-Route::put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
+Route::get('/users', [UserController::class, "getUsers"])->name("userList")->middleware("auth:sanctum");
+Route::get('/users/{id}', [UserController::class, "getUser"])->name("userDetails")->middleware("auth:sanctum");
+Route::put('/users/{id}', [UserController::class, "editUser"])->name("userEdit")->middleware("auth:sanctum");
 
 
 //ARTICLES
 Route::get('/articles', [ArticleController::class, "getArticles"])->name("articleList");
-Route::post('/articles', [ArticleController::class, "createArticle"])->name("articleCreate");
-//Route::middleware('auth:sanctum')->post('/users', [UserController::class, "createUser"])->name("userCreate");
+Route::post('/articles', [ArticleController::class, "createArticle"])->name("articleCreate")->middleware("auth:sanctum");
 Route::get('/articles/{id}', [ArticleController::class, "getArticle"])->name("articleDetails");
-//Route::middleware('auth:sanctum')->put('/users/{id}', [UserController::class, "editUser"])->name("userEdit");
-Route::put('/articles/{id}', [ArticleController::class, "editArticle"])->name("articleEdit");
+Route::put('/articles/{id}', [ArticleController::class, "editArticle"])->name("articleEdit")->middleware("auth:sanctum");
 
 
-//LOGIN
-Route::any("/login", function () {
-    return response()->json(
-        ["error" => "You have to log in before doing this request"],
-        401
-    );
-})->name("login");
+
+//COMMENTS
+Route::get('/comments', [CommentController::class, "getComments"])->name("commentList");
+Route::post('/comments', [CommentController::class, "createComment"])->name("commentCreate")->middleware("auth:sanctum");
+Route::get('/comments/{id}', [CommentController::class, "getComment"])->name("commentDetails");
+Route::put('/comments/{id}', [CommentController::class, "editComment"])->name("commentEdit")->middleware("auth:sanctum");

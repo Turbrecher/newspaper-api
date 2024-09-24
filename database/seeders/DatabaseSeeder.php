@@ -36,7 +36,6 @@ class DatabaseSeeder extends Seeder
         $user->photo = "https://github.com/turbrecher.png";
         $user->password = Hash::make("12345678");
 
-
         $user->assignRole("admin");
 
 
