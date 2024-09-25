@@ -15,13 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer("user_id")->unsigned();
             $table->integer("article_id")->unsigned();
-            $table->foreign("user_id")->references("id")->on("users");
-            $table->foreign("article_id")->references("id")->on("articles");
+            $table->foreign("user_id")->references("id")->on("users")->cascadeOnDelete();
+            $table->foreign("article_id")->references("id")->on("articles")->cascadeOnDelete();
             $table->string("content");
             $table->string("date");
             $table->string("time");
-
-            $table->timestamps();
         });
     }
 

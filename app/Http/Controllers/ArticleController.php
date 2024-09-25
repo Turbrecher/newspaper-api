@@ -12,10 +12,14 @@ class ArticleController extends Controller
     function getArticles()
     {
         $articles = Article::all();
+        //load writer subobject
+        foreach ($articles as $article) {
+            $article->writer;
+        }
 
 
         return response()->json(
-            [$articles],
+            $articles,
             200
         );
     }
@@ -26,6 +30,13 @@ class ArticleController extends Controller
 
         try {
             $article = Article::find($id);
+            
+            //load subobjects
+            $article->writer;
+            $article->comments;
+            foreach($article->comments as $comment){
+                $comment->user;
+            }
 
             if ($article == null) {
                 return response()->json(
@@ -36,7 +47,8 @@ class ArticleController extends Controller
 
 
             return response()->json(
-                [$article],
+
+                $article,
                 200
             );
         } catch (Exception $e) {

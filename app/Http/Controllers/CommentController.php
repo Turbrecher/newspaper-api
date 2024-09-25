@@ -12,10 +12,15 @@ class CommentController extends Controller
     function getComments()
     {
         $comments = Comment::all();
+        
+        foreach($comments as $comment){
+            $comment->user;
+            $comment->article;
+        }
 
 
         return response()->json(
-            [$comments],
+            $comments,
             200
         );
     }
@@ -26,6 +31,8 @@ class CommentController extends Controller
 
         try {
             $comment = Comment::find($id);
+            $comment->user;
+            $comment->article;
 
             if ($comment == null) {
                 return response()->json(
@@ -36,7 +43,7 @@ class CommentController extends Controller
 
 
             return response()->json(
-                [$comment],
+                $comment,
                 200
             );
         } catch (Exception $e) {

@@ -20,8 +20,8 @@ class CommentFactory extends Factory
             'content' => fake()->words(110, true),
             'date' => fake()->date(),
             'time' => fake()->time(),
-            'user_id' => 1,
-            'article_id' => 1
+            'user_id' => rand(1,11),
+            'article_id' => rand(1,10)
         ];
     }
 }

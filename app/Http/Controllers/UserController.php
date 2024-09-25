@@ -23,7 +23,7 @@ class UserController extends Controller
 
 
         return response()->json(
-            [$users],
+            $users,
             200
         );
     }
@@ -53,7 +53,7 @@ class UserController extends Controller
 
 
             return response()->json(
-                [$user],
+                $user,
                 200
             );
         } catch (Exception $e) {

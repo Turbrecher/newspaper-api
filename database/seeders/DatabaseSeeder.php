@@ -22,11 +22,6 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
 
-        User::factory(10)->create();
-        Article::factory(10)->create();
-        Comment::factory(10)->create();
-
-
 
         $user = new User();
         $user->name = "Victor";
@@ -40,5 +35,13 @@ class DatabaseSeeder extends Seeder
 
 
         $user->save();
+
+        User::factory(10)->create();
+        Article::factory(10)->create();
+        Comment::factory(10)->create();
+
+
+
+        
     }
 }

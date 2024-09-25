@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,12 +17,11 @@ return new class extends Migration
             $table->string("title");
             $table->string("subtitle");
             $table->string("content");
-            $table->integer("user_id")->unsigned();
-            $table->foreign("user_id")->references('id')->on('users');
+            $table->integer("writer_id")->unsigned();
+            $table->foreign("writer_id")->references('id')->on('users')->cascadeOnDelete();
             $table->string("date");
             $table->string("time");
             $table->string("photo")->nullable();
-            $table->timestamps();
         });
     }
 

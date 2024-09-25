@@ -23,7 +23,7 @@ class ArticleFactory extends Factory
             'date' => fake()->date(),
             'time' => fake()->time(),
             'photo' => fake()->imageUrl(),
-            'user_id' => 1
+            'writer_id' => rand(1,10)
 
         ];
     }
