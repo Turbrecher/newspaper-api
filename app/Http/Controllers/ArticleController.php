@@ -30,11 +30,11 @@ class ArticleController extends Controller
 
         try {
             $article = Article::find($id);
-            
+
             //load subobjects
             $article->writer;
             $article->comments;
-            foreach($article->comments as $comment){
+            foreach ($article->comments as $comment) {
                 $comment->user;
             }
 

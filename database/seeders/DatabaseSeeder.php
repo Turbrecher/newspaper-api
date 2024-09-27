@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
 
 
         $user = new User();
-        $user->name = "Victor";
-        $user->surname = "Vera";
-        $user->username = "Vittorio";
-        $user->email = "victor@correo.es";
+        $user->name = "VICTOR";
+        $user->surname = "VERA";
+        $user->username = "VITTORIO";
+        $user->email = "VICTOR@CORREO.ES";
         $user->photo = "https://github.com/turbrecher.png";
         $user->password = Hash::make("12345678");
 

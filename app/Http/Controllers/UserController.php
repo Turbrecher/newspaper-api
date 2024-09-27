@@ -128,11 +128,11 @@ class UserController extends Controller
 
 
         $user = new User();
-        $user->name = $request['name'];
-        $user->surname = $request['surname'];
-        $user->username = $request['username'];
-        $user->email = $request['email'];
-        $user->password = Hash::make($request['name']);
+        $user->name = strtoupper($request['name']);
+        $user->surname = strtoupper($request['surname']);
+        $user->username = strtoupper($request['username']);
+        $user->email = strtoupper($request['email']);
+        $user->password = Hash::make($request['password']);
         $user->assignRole("user");
 
         $user->save();
@@ -150,11 +150,14 @@ class UserController extends Controller
     //Login
     function login(Request $request)
     {
-        $user = User::where('username',  $request->username)->first();
+        $user = User::where('username',  strtoupper($request->username))->first();
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => ['Username or password incorrect'],
-            ]);
+            return response()->json(
+                [
+                    'message' => ['Username or password incorrect']
+                ],
+                400
+            );
         }
 
         $user->tokens()->delete();
@@ -165,6 +168,21 @@ class UserController extends Controller
             'name' => $user->name,
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
+    }
+
+
+    //Profile
+    public function profile(Request $request)
+    {
+
+        $user = $request->user();
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'user' => $user
+            ]
+        );
     }
 
 
