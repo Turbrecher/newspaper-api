@@ -197,4 +197,26 @@ class UserController extends Controller
             ]
         );
     }
+
+
+
+    public function getRole(Request $request)
+    {
+
+        if ($request->user()->hasRole("admin")) {
+            return response()->json(
+                ["role" => "admin"]
+            );
+        }
+
+        if ($request->user()->hasRole("writer")) {
+            return response()->json(
+                ["role" => "writer"]
+            );
+        }
+
+        return response()->json(
+            ["role" => "user"]
+        );
+    }
 }

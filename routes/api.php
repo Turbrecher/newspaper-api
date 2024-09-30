@@ -25,6 +25,7 @@ Route::post('/login', [UserController::class, "login"])->name("login");
 Route::post('/register', [UserController::class, "register"])->name("register");
 Route::post('/logout', [UserController::class, "logout"])->name("logout")->middleware("auth:sanctum");
 Route::post('/profile', [UserController::class, "profile"])->name("profile")->middleware("auth:sanctum");
+Route::post('/role', [UserController::class, "getRole"])->name("getRole")->middleware("auth:sanctum");
 
 //USERS
 Route::get('/users', [UserController::class, "getUsers"])->name("userList")->middleware("auth:sanctum");
@@ -34,6 +35,7 @@ Route::put('/users/{id}', [UserController::class, "editUser"])->name("userEdit")
 
 //ARTICLES
 Route::get('/articles', [ArticleController::class, "getArticles"])->name("articleList");
+Route::get('/writerarticles', [ArticleController::class, "getWriterArticles"])->name("getWriterArticles")->middleware("auth:sanctum");
 Route::post('/articles', [ArticleController::class, "createArticle"])->name("articleCreate")->middleware("auth:sanctum");
 Route::get('/articles/{id}', [ArticleController::class, "getArticle"])->name("articleDetails");
 Route::put('/articles/{id}', [ArticleController::class, "editArticle"])->name("articleEdit")->middleware("auth:sanctum");

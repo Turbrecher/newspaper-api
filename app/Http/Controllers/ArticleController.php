@@ -24,6 +24,24 @@ class ArticleController extends Controller
         );
     }
 
+
+    //Method that retrieves all users of db.
+    function getWriterArticles(Request $request)
+    {
+        $id = $request->user()->id;
+        $articles = Article::where("writer_id", $id)->get();
+        //load writer subobject
+        foreach ($articles as $article) {
+            $article->writer;
+        }
+
+
+        return response()->json(
+            $articles,
+            200
+        );
+    }
+
     //Method that retrieves a certain user of db.
     function getArticle(int $id)
     {
@@ -59,10 +77,18 @@ class ArticleController extends Controller
     //Method that creates a new user on db.
     function createArticle(Request $request)
     {
+        if ($request->user()->hasRole('user')) {
+            return response()->json(
+                ["message" => "You are not allowed to create an article"],
+                401
+            );
+        }
+
+
         $validated = $request->validate([
             "title" => ["required", "max:100"],
             "subtitle" => ["required", "max:50"],
-            "content" => ["required", "max:2048"]
+            "content" => ["required", "max:10000"]
         ]);
 
 
@@ -70,7 +96,7 @@ class ArticleController extends Controller
         $article->title = $request['title'];
         $article->subtitle = $request['subtitle'];
         $article->content = $request['content'];
-        $article->user_id = $request->user()->id;
+        $article->writer_id = $request->user()->id;
         $article->date = date("m-d-Y");
         $article->time = date("H:i");
 
@@ -94,7 +120,7 @@ class ArticleController extends Controller
     //Method that edits an existing user of db.
     function editArticle(Request $request, int $id)
     {
-        if ($request->user()->hasRole('general')) {
+        if ($request->user()->hasRole('user')) {
             return response()->json(
                 ["message" => "You are not allowed to edit this article"],
                 401
@@ -105,15 +131,15 @@ class ArticleController extends Controller
         $validated = $request->validate([
             "title" => ["required", "max:100"],
             "subtitle" => ["required", "max:50"],
-            "content" => ["required", "max:2048"],
-            "photo" => ["regex:https|^$"]
+            "content" => ["required", "max:10000"],
+            "photo" => [""]
         ]);
 
         $article = Article::find($id);
 
         //If writer user tries to edit another person's article.
         if ($request->user()->hasRole('writer')) {
-            $NOT_MY_ARTICLE = $request->user()->id != $article->user_id;
+            $NOT_MY_ARTICLE = $request->user()->id != $article->writer_id;
             if ($NOT_MY_ARTICLE) {
                 return response()->json(
                     ["message" => "You are not allowed to edit this article"],
@@ -128,7 +154,7 @@ class ArticleController extends Controller
         $article->content = $request['content'];
 
 
-        if ($request->photo != "") {
+        if ($request->photo != "" && $request->photo != $article->photo) {
             $article->photo = $request['photo'];
         }
 
@@ -142,8 +168,5 @@ class ArticleController extends Controller
             ],
             200
         );
-
-
-        return response()->json($request->user(), 200);
     }
 }
