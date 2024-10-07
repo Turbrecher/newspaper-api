@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\UserController;
 use App\Models\Comment;
 use App\Models\User;
@@ -47,3 +48,7 @@ Route::get('/comments', [CommentController::class, "getComments"])->name("commen
 Route::post('/comments', [CommentController::class, "createComment"])->name("commentCreate")->middleware("auth:sanctum");
 Route::get('/comments/{id}', [CommentController::class, "getComment"])->name("commentDetails");
 Route::put('/comments/{id}', [CommentController::class, "editComment"])->name("commentEdit")->middleware("auth:sanctum");
+
+
+//DEFAULT IMAGE 
+Route::get('/profileimage/{id}', [ImagesController::class, "profileImage"])->name("profileImage");

@@ -134,6 +134,7 @@ class UserController extends Controller
         $user->email = strtoupper($request['email']);
         $user->password = Hash::make($request['password']);
         $user->assignRole("user");
+        $user->photo = url("http://localhost:8000/api/profileimage/0");
 
         $user->save();
 
