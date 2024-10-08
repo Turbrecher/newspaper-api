@@ -32,6 +32,7 @@ Route::post('/role', [UserController::class, "getRole"])->name("getRole")->middl
 Route::get('/users', [UserController::class, "getUsers"])->name("userList")->middleware("auth:sanctum");
 Route::get('/users/{id}', [UserController::class, "getUser"])->name("userDetails")->middleware("auth:sanctum");
 Route::put('/users/{id}', [UserController::class, "editUser"])->name("userEdit")->middleware("auth:sanctum");
+Route::delete('/users/{id}', [UserController::class, "deleteUser"])->name("userDelete")->middleware("auth:sanctum");
 
 
 //ARTICLES
@@ -40,6 +41,7 @@ Route::get('/writerarticles', [ArticleController::class, "getWriterArticles"])->
 Route::post('/articles', [ArticleController::class, "createArticle"])->name("articleCreate")->middleware("auth:sanctum");
 Route::get('/articles/{id}', [ArticleController::class, "getArticle"])->name("articleDetails");
 Route::put('/articles/{id}', [ArticleController::class, "editArticle"])->name("articleEdit")->middleware("auth:sanctum");
+Route::delete('/articles/{id}', [ArticleController::class, "deleteArticle"])->name("articleDelete")->middleware("auth:sanctum");
 
 
 

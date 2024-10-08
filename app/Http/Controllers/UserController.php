@@ -61,6 +61,34 @@ class UserController extends Controller
     }
 
 
+    //Method that deletes an existing user of db.
+    function deleteUser(Request $request, int $id)
+    {
+
+        $user = User::find($id);
+
+        if ($request->user()->hasRole(['user', 'writer'])) {
+            if ($user->id != $request->user()->id) {
+                return response()->json(
+                    ["message" => "You are not allowed to delete this user"],
+                    401
+                );
+            }
+        }
+
+
+        $user->delete();
+
+        return response()->json(
+            [
+                "user_id" => $user->id,
+                "message" => "User succesfully deleted"
+            ],
+            200
+        );
+    }
+
+
     //Method that edits an existing user of db.
     function editUser(Request $request, int $id)
     {

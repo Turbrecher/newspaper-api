@@ -117,6 +117,48 @@ class ArticleController extends Controller
         );
     }
 
+
+
+    function deleteArticle(Request $request, int $id)
+    {
+
+        if ($request->user()->hasRole('user')) {
+            return response()->json(
+                ["message" => "You are not allowed to edit this article"],
+                401
+            );
+        }
+
+
+        $article = Article::find($id);
+
+
+
+        //If writer user tries to delete another person's article.
+        if ($request->user()->hasRole('writer')) {
+            $NOT_MY_ARTICLE = $request->user()->id != $article->writer_id;
+            if ($NOT_MY_ARTICLE) {
+                return response()->json(
+                    ["message" => "You are not allowed to edit this article"],
+                    401
+                );
+            }
+        }
+
+
+        $article->delete();
+
+
+        return response()->json(
+            [
+                "article_id" => $article->id,
+                "article" => $article,
+                "message" => "Article succesfully deleted"
+            ],
+            200
+        );
+    }
+
     //Method that edits an existing user of db.
     function editArticle(Request $request, int $id)
     {
